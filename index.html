@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <script src="js/RGraph.svg.common.core.js"></script>
+        <script src="js/RGraph.svg.hbar.js"></script>
+        <script src="js/RGraph.svg.pie.js"></script>
+    </head>
+    <body>
+        <style>
+            div#meters{
+                position: relative;                
+            }        
+            div#meters div {
+                float: left;
+                width: 300px;
+                height: 300px;
+            }
+        </style>
+        
+        <div id="meters">
+            <div id="chart-container1"></div>            
+            <div id="chart-container2"></div>
+        </div>
+        <script>
+             window.onload = function () {
+                createPie(100, 500, "PM 10","chart-container1");
+                createPie(30, 90, "PM 2.5","chart-container2");
+            };
+
+            function createPie(value, maxValue, label, containter){
+                console.log("value:"+value);
+                console.log("label:"+label);
+                console.log("containter:"+containter);
+
+                pie1 = new RGraph.SVG.Pie({
+                id: containter,
+                data: [value,maxValue-value],
+                options: 
+                {
+                    colors: ['red', 'transparent'],
+                    donut: true,
+                    donutWidth: 20
+                }}).on('draw', function (obj)
+                    {
+                        RGraph.SVG.create({
+                            svg: obj.svg,
+                            type: 'circle',
+                            parent: obj.layers.background1,
+                            attr: {
+                                cx: obj.centerx,
+                                cy: obj.centery,
+                                r: obj.radius,
+                                fill: 'gray'
+                            }
+                        });
+                        RGraph.SVG.create({
+                            svg: obj.svg,
+                            type: 'circle',
+                            parent: obj.layers.background1,
+                            attr: {
+                                cx: obj.centerx,
+                                cy: obj.centery,
+                                r: obj.radius - obj.properties.donutWidth,
+                                fill: 'black'
+                            }
+                        });
+                
+                        // Add the text label
+                        RGraph.SVG.text({
+                            object: obj,
+                            parent: obj.svg.all,
+                            text:   obj.data[0],
+                            x:      obj.centerx,
+                            y:      obj.centery,
+                            halign: 'center',
+                            valign: 'center',
+                            size:   45,
+                            bold: true,
+                            color:  '#999'
+                        });
+                
+                        // Add the text label of the name
+                        RGraph.SVG.text({
+                            object: obj,
+                            parent: obj.svg.all,
+                            text:   label,
+                            x:      obj.centerx,
+                            y:      obj.centery + 20,
+                            halign: 'center',
+                            valign: 'top',
+                            size:   16,
+                            bold: true,
+                            color:  '#999'
+                        });
+                    }).roundRobin({frames: 45});                
+            };
+        </script>
+    </body>
+</html>
