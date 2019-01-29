@@ -31,6 +31,12 @@
                 console.log("label:"+label);
                 console.log("containter:"+containter);
 
+                if (value > maxValue) {
+                    console.log("old maxValue:" + maxValue);
+                    maxValue = value;
+                    console.log("new maxValue:" + maxValue);
+                }
+
                 pie1 = new RGraph.SVG.Pie({
                 id: containter,
                 data: [value,maxValue-value],
